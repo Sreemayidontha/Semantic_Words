@@ -1,0 +1,127 @@
+pip install fasttext
+%%capture
+pip install tika        #Tika is a Python Library to extract Text from Pdf
+import nltk
+from pprint import pprint
+from gensim.models import FastText
+import fasttext
+nltk.download('punkt')
+from nltk import word_tokenize
+from pprint import pprint
+from tika import parser
+import string
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+from tika import parser
+from google.colab import drive
+drive.mount('/content/gdrive')
+open('/content/gdrive/My Drive/Colab Notebooks/Standard_treatment_guidlines.pdf')
+rawText = parser.from_file('/content/gdrive/My Drive/Colab Notebooks/Standard_treatment_guidlines.pdf')
+print(type(rawText))    #Tika parser returns a dictionary
+print(rawText.items())  #Returned dictionary contains metadata and content
+rawList = rawText['content'].splitlines()                        
+rawList = [item.lower() for item in rawList if item.strip()]    
+print(len(rawList))   #About 23229 sentences in total
+print(rawList[23222])   #sample sentence
+stg_str = ' '.join(rawList)     #Join list of sentences into string
+for c in string.punctuation:
+    stg_str = stg_str.replace(c, "")  #remove punctuations
+len(stg_str)                                  #About 693967 strings in total   
+stg_str[24213]
+with open("stg2008.txt", "w") as text_file:
+    text_file.write(stg_str)   #write string as text file
+%%time
+stgmodel_10 = fasttext.train_unsupervised('stg2008.txt',epoch=10,dim=300)    #train model using fasttext
+stgmodel_10.save_model('stg2008_10.bin')    #save trained model
+%%time
+stgmodel_20 = fasttext.train_unsupervised('stg2008.txt',epoch=20,dim=300)    #train model using fasttext
+stgmodel_20.save_model('stg2008_20.bin')    #save trained model
+%%time
+stgmodel_30 = fasttext.train_unsupervised('stg2008.txt',epoch=30,dim=300)    #train model using fasttext
+stgmodel_30.save_model('stg2008_30.bin')    #save trained model
+pip install gensim==4.0.0
+fasttext_trained_model_10 = FastText.load_fasttext_format('stg2008_10.bin') #Load Model using gensim's Fasttext 
+fasttext_trained_model_20 = FastText.load_fasttext_format('stg2008_20.bin') #Load Model using gensim's Fasttext 
+fasttext_trained_model_30 = FastText.load_fasttext_format('stg2008_30.bin') #Load Model using gensim's Fasttext 
+fasttext_trained_model_10.wv.vocab
+fasttext_trained_model_20.wv.vocab
+fasttext_trained_model_30.wv.vocab
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["dizziness"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["dizziness"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["dizziness"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["paracetamol"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["paracetamol"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["paracetamol"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["pain"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["pain"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["pain"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["gastroenteritis"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["gastroenteritis"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["gastroenteritis"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["malaria"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["malaria"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["malaria"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["sepsis"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["sepsis"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["sepsis"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["ciprofloxacin"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["ciprofloxacin"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["ciprofloxacin"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["adverse effect"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["adverse effect"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["adverse effect"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["ulcer"], topn=5)))
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["ulcer"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["ulcer"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["gonorhhoea"], topn=5)))  #incorrect spelling of word
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["gonorhhoea"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["gonorhhoea"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["insulin"], topn=5)))  
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["insulin"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["insulin"], topn=5)))
+print("For 10 epochs model{}\n" .format(fasttext_trained_model_10.wv.most_similar(["diabetes"], topn=5)))  #incorrect spelling of word
+print("For 20 epochs model{}\n" .format(fasttext_trained_model_20.wv.most_similar(["diabetes"], topn=5)))
+print("For 30 epochs model{}\n" .format(fasttext_trained_model_30.wv.most_similar(["diabetes"], topn=5)))
+print("For 10 epochs model {}\n" .format(fasttext_trained_model_10.wv.doesnt_match(["paracetamol", "headache","diarrhoea","dizziness"])))  #incorrect spelling of word
+print("For 20 epochs model {}\n" .format(fasttext_trained_model_20.wv.doesnt_match(["paracetamol", "headache","diarrhoea","dizziness"])))
+print("For 30 epochs model {}\n" .format(fasttext_trained_model_30.wv.doesnt_match(["paracetamol", "headache","diarrhoea","dizziness"])))
+print("For 10 epochs model {}\n" .format(fasttext_trained_model_10.wv.doesnt_match(["Hydrochorothiazide", "Furosemide","Amlodipine"])))  
+print("For 20 epochs model {}\n" .format(fasttext_trained_model_20.wv.doesnt_match(["Hydrochorothiazide", "Furosemide","Amlodipine"])))
+print("For 30 epochs model {}\n" .format(fasttext_trained_model_30.wv.doesnt_match(["Hydrochorothiazide", "Furosemide","Amlodipine"])))
+print("For 10 epochs model {}\n" .format(fasttext_trained_model_10.wv.doesnt_match(["Hydrochorothiazide", "Furosemide","Amlodipine"])))  
+print("For 20 epochs model {}\n" .format(fasttext_trained_model_20.wv.doesnt_match(["Hydrochorothiazide", "Furosemide","Amlodipine"])))
+print("For 30 epochs model {}\n" .format(fasttext_trained_model_30.wv.doesnt_match(["Hydrochorothiazide", "Furosemide","Amlodipine"])))
+print("For 10 epochs model {}\n" .format(fasttext_trained_model_10.wv.similarity(w1='drowsiness', w2='dizziness')))  
+print("For 20 epochs model {}\n" .format(fasttext_trained_model_20.wv.similarity(w1='drowsiness', w2='dizziness')))
+print("For 30 epochs model {}\n" .format(fasttext_trained_model_30.wv.similarity(w1='drowsiness', w2='dizziness')))
+print("For 10 epochs model {}\n" .format(fasttext_trained_model_10.wv.similarity(w1='drowsiness', w2='headache')))  
+print("For 20 epochs model {}\n" .format(fasttext_trained_model_20.wv.similarity(w1='drowsiness', w2='headache')))
+print("For 30 epochs model {}\n" .format(fasttext_trained_model_30.wv.similarity(w1='drowsiness', w2='headache')))
+print("For 10 epochs model {}\n" .format(fasttext_trained_model_10.wv.similarity(w1='drowsiness', w2='amlodipine')))  
+print("For 20 epochs model {}\n" .format(fasttext_trained_model_20.wv.similarity(w1='drowsiness', w2='amlodipine')))
+print("For 30 epochs model {}\n" .format(fasttext_trained_model_30.wv.similarity(w1='drowsiness', w2='amlodipine')))
+print("For 10 epochs model {}\n" .format(fasttext_trained_model_10.wv.similarity(w1='amlodipine', w2='cephalexin')))  
+print("For 20 epochs model {}\n" .format(fasttext_trained_model_20.wv.similarity(w1='amlodipine', w2='cephalexin')))
+print("For 30 epochs model {}\n" .format(fasttext_trained_model_30.wv.similarity(w1='amlodipine', w2='cephalexin')))
+semantically_similar_words = {words: [item[0] for item in fasttext_trained_model_10.wv.most_similar([words], topn=5)]
+                  for words in ['ringworm','paracetamol','Nurse' ,'pain', 'nausea', 'delivery', 'infection', 'orally','child',"diabetes"]}
+
+for k,v in semantically_similar_words.items():
+    print(k+":"+str(v))
+all_similar_words = sum([[k] + v for k, v in semantically_similar_words.items()], [])
+
+print(all_similar_words)
+print(type(all_similar_words))
+print(len(all_similar_words))
+word_vectors = fasttext_trained_model_10[all_similar_words]
+
+pca = PCA(2)
+
+p_comps = pca.fit_transform(word_vectors)
+word_names = all_similar_words
+
+plt.figure(figsize=(18, 10))
+plt.scatter(p_comps[:, 0], p_comps[:, 1], c='b')
+
+for word_names, x, y in zip(word_names, p_comps[:, 0], p_comps[:, 1]):
+    plt.annotate(word_names, xy=(x+0.06, y+0.03), xytext=(0, 0), textcoords='offset points')
